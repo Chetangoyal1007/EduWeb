@@ -1,0 +1,68 @@
+/* General Styling */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-bottom: 30px;
+}
+
+.primary-btn {
+  background: linear-gradient(to right, #6a11cb, #2575fc);
+  color: white;
+  font-weight: bold;
+  padding: 12px 20px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.primary-btn:hover {
+  background: linear-gradient(to right, #2575fc, #6a11cb);
+  transform: scale(1.05);
+}
+
+/* Form Inputs */
+input,
+textarea {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border 0.3s ease-in-out;
+}
+
+input:focus,
+textarea:focus {
+  outline: none;
+  border-color: #6a11cb;
+}
+
+/* Dark Mode Styles */
+.dark input,
+.dark textarea {
+  background-color: #1a1a1a;
+  color: white;
+  border-color: #444;
+}
+
+.dark input:focus,
+.dark textarea:focus {
+  border-color: #6a11cb;
+}
+
+/* Contact Info */
+.contact-info {
+  font-size: 18px;
+}
+
+.contact-info p {
+  margin: 5px 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr !important;
+  }
+}

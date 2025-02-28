@@ -1,0 +1,152 @@
+/* Full Page Background */
+.login-body {
+    background-image: url('../../../assets/BG1.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* Glassmorphism Container */
+.container1 {
+    width: 400px;
+    padding: 40px;
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    transition: transform 0.3s ease-in-out;
+}
+
+.container1:hover {
+    transform: scale(1.02);
+}
+
+/* Title Styling */
+.text1 {
+    color: white;
+    font-size: 36px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.underline1 {
+    width: 60px;
+    height: 4px;
+    background: #facc15; /* Yellow accent */
+    border-radius: 4px;
+    margin: 10px auto;
+}
+
+/* Input Fields */
+.inputs1 {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.input1 {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    padding: 12px;
+    transition: all 0.3s ease-in-out;
+    border: 1px solid transparent;
+}
+
+.input1:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.input1 img {
+    width: 22px;
+    margin-right: 10px;
+    opacity: 0.8;
+}
+
+.input1 input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: white;
+    font-size: 16px;
+}
+
+.input1 input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* Forgot Password */
+.forgot-password1 {
+    margin-top: 10px;
+    color: #facc15;
+    font-size: 14px;
+    cursor: pointer;
+    text-align: right;
+}
+
+.forgot-password1:hover {
+    text-decoration: underline;
+}
+
+/* Buttons */
+.submit-container1 {
+    display: flex;
+    gap: 10px;
+    margin-top: 25px;
+}
+
+.submit1 {
+    flex: 1;
+    padding: 12px;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    border: none;
+}
+
+.submit1:first-child {
+    background: linear-gradient(135deg, #facc15, #f97316);
+    color: #1e293b;
+}
+
+.submit1:last-child {
+    background: linear-gradient(135deg, #0ea5e9, #3b82f6);
+    color: white;
+}
+
+.submit1:hover {
+    filter: brightness(1.2);
+    transform: scale(1.05);
+}
+
+.submit1:active {
+    transform: scale(0.98);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 500px) {
+    .container1 {
+        width: 90%;
+        padding: 30px;
+    }
+
+    .input1 input {
+        font-size: 14px;
+    }
+
+    .submit1 {
+        font-size: 14px;
+    }
+}
