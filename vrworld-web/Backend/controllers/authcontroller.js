@@ -1,80 +1,59 @@
+const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const User = require("../models/user"); // Assuming your User model is in the 'models' folder
 
-// Handle Sign Up
-exports.signup = async (req, res) => {
-  const { name, email, password } = req.body;
-
-  // Check if all fields are provided
-  if (!name || !email || !password) {
-    return res.status(400).json({ success: false, message: "Please fill in all fields." });
-  }
+// POST /api/auth/signup
+const signup = async (req, res) => {
+  const { name, email, password, role } = req.body;
 
   try {
-    // Check if the user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ success: false, message: "Email already in use." });
+      return res.status(400).json({ success: false, message: "User already exists" });
     }
 
-    // Hash the password before saving it
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create a new user
-    const newUser = new User({
+    const newUser = await User.create({
       name,
       email,
       password: hashedPassword,
+      role: role || "user",
     });
 
-    // Save the new user
-    await newUser.save();
-
-    // Generate a JWT token for the new user
-    const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
-
-    res.status(201).json({
-      success: true,
-      token,  // Send token in response to authenticate the user
+    const token = jwt.sign({ id: newUser._id, role: newUser.role }, "SECRET_KEY", {
+      expiresIn: "1h",
     });
+
+    res.status(201).json({ success: true, token, role: newUser.role });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false, message: "Server error" });
+    console.error("Signup error:", error);
+    res.status(500).json({ success: false, message: "Server Error" });
   }
 };
 
-// Handle Login
-exports.login = async (req, res) => {
+// POST /api/auth/login
+const login = async (req, res) => {
   const { email, password } = req.body;
 
-  // Check if email and password are provided
-  if (!email || !password) {
-    return res.status(400).json({ success: false, message: "Please fill in all fields." });
-  }
-
   try {
-    // Check if the user exists
     const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(400).json({ success: false, message: "Invalid email or password." });
-    }
+    if (!user)
+      return res.status(404).json({ success: false, message: "User not found" });
 
-    // Compare the provided password with the hashed password in the database
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ success: false, message: "Invalid email or password." });
-    }
+    if (!isMatch)
+      return res.status(400).json({ success: false, message: "Invalid credentials" });
 
-    // Generate a JWT token
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
-
-    res.status(200).json({
-      success: true,
-      token, // Send token as a response
+    const token = jwt.sign({ id: user._id, role: user.role }, "SECRET_KEY", {
+      expiresIn: "1h",
     });
+
+    res.json({ success: true, token, role: user.role });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false, message: "Server error" });
+    console.error("Login error:", error);
+    res.status(500).json({ success: false, message: "Server Error" });
   }
 };
+
+module.exports = { signup, login };
