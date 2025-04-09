@@ -1,42 +1,3 @@
-// const express = require("express");
-// const router = express.Router();
-// const Exam = require("../models/Exam");
-
-// // Create a new exam
-// router.post("/", async (req, res) => {
-//   try {
-//     const exam = new Exam(req.body);
-//     await exam.save();
-//     res.status(201).json(exam);
-//   } catch (err) {
-//     res.status(400).json({ error: err.message });
-//   }
-// });
-
-// // Get all exams
-// router.get("/", async (req, res) => {
-//   try {
-//     const exams = await Exam.find();
-//     res.json(exams);
-//   } catch (err) {
-//     res.status(500).json({ error: "Failed to fetch exams" });
-//   }
-// });
-
-// // Get a specific exam by ID
-// router.get("/:id", async (req, res) => {
-//   try {
-//     const exam = await Exam.findById(req.params.id);
-//     if (exam) res.json(exam);
-//     else res.status(404).json({ error: "Exam not found" });
-//   } catch (err) {
-//     res.status(400).json({ error: "Invalid ID format" });
-//   }
-// });
-
-
-// module.exports = router;
-
 const express = require("express");
 const router = express.Router();
 const Exam = require("../models/Exam");
@@ -66,8 +27,8 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const exam = await Exam.findById(req.params.id);
-    if (exam) res.json(exam);
-    else res.status(404).json({ error: "Exam not found" });
+    if (!exam) return res.status(404).json({ error: "Exam not found" });
+    res.json(exam);
   } catch (err) {
     res.status(400).json({ error: "Invalid ID format" });
   }
@@ -81,11 +42,9 @@ router.put("/:id", async (req, res) => {
       runValidators: true,
     });
 
-    if (updatedExam) {
-      res.json(updatedExam);
-    } else {
-      res.status(404).json({ error: "Exam not found" });
-    }
+    if (!updatedExam) return res.status(404).json({ error: "Exam not found" });
+
+    res.json(updatedExam);
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
@@ -95,11 +54,9 @@ router.put("/:id", async (req, res) => {
 router.delete("/:id", async (req, res) => {
   try {
     const deletedExam = await Exam.findByIdAndDelete(req.params.id);
-    if (deletedExam) {
-      res.json({ message: "Exam deleted successfully" });
-    } else {
-      res.status(404).json({ error: "Exam not found" });
-    }
+    if (!deletedExam) return res.status(404).json({ error: "Exam not found" });
+
+    res.json({ message: "Exam deleted successfully" });
   } catch (err) {
     res.status(400).json({ error: "Invalid ID format" });
   }

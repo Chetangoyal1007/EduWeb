@@ -5,6 +5,7 @@ const questionSchema = new mongoose.Schema({
   text: { type: String, required: true },
   options: [String], // Only for MCQs
   answer: String,    // Only for MCQs
+  marks: { type: Number, required: true }, // <-- Added marks here
 });
 
 const examSchema = new mongoose.Schema({

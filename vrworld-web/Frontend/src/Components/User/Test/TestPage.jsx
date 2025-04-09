@@ -176,7 +176,13 @@ const TestPage = () => {
       </p>
 
       {/* Question Text */}
-      <p className="text-lg font-semibold">{test.questions[currentQuestionIndex].text}</p>
+      <p className="text-lg font-semibold mb-2">
+  {test.questions[currentQuestionIndex].text}
+</p>
+<p className="text-sm text-gray-700 dark:text-gray-300 mb-4">
+  <strong>Marks:</strong> {test.questions[currentQuestionIndex].marks}
+</p>
+
 
       {/* Render MCQ Options if the question type is MCQ */}
       {test.questions[currentQuestionIndex].type === "mcq" && (

@@ -7,7 +7,13 @@ const AdminCreateExam = () => {
   const addQuestion = () => {
     setQuestions([
       ...questions,
-      { type: "mcq", text: "", options: ["", "", "", ""], answer: "" },
+      {
+        type: "mcq",
+        text: "",
+        options: ["", "", "", ""],
+        answer: "",
+        marks: 1,
+      },
     ]);
   };
 
@@ -73,6 +79,15 @@ const AdminCreateExam = () => {
             placeholder="Question Text"
             value={q.text}
             onChange={(e) => updateQuestion(i, "text", e.target.value)}
+          />
+
+          <input
+            type="number"
+            min="1"
+            className="border p-2 w-full mb-4 rounded bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+            placeholder="Marks"
+            value={q.marks}
+            onChange={(e) => updateQuestion(i, "marks", Number(e.target.value))}
           />
 
           {q.type === "mcq" && (
