@@ -11,6 +11,8 @@ import Cart from './Components/User/HomePage/Course/Cart.jsx';
 import ThankYouPage from './Components/User/Test/Thankyou.jsx';
 import Certificate from './Components/User/Test/Certificate.jsx';
 import AdminDashboard from './Components/Admin/dashboard.jsx';
+import AdminCreateExam from './Components/Admin/AdminCreateExam.jsx';
+import AdminManageExams from './Components/Admin/AdminManageExams.jsx';
 
 const App = () => {
 
@@ -32,6 +34,9 @@ const App = () => {
         <Route path="/certificate" element={<Certificate />} />
         <Route path="/Contact" element={<Contact />} />
         <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/admin/create-exam" element={<AdminCreateExam />} />
+        <Route path="/admin/manage-exam" element={<AdminManageExams />} />
+
       </Routes>
     </Router>
   );

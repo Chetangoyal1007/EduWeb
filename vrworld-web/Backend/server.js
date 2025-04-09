@@ -4,6 +4,8 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const authRoutes = require("./routes/auth");
+const examRoutes = require("./routes/exams");
+
 
 
 dotenv.config();
@@ -23,33 +25,35 @@ mongoose.connect(process.env.MONGO_URI, {
 });
 
 app.use("/api/auth", authRoutes);
-const testData = {
-  1: {
-    title: "JavaScript",
-    questions: [
-      { type: "mcq", text: "What does `typeof null` return?", options: ["null", "undefined", "object", "string"], answer: "object" },
-      { type: "coding", text: "Write a function to reverse a string." }
-    ],
-  },
+app.use("/api/exams", examRoutes);
 
-2: {
-    title: "Python",
-    questions: [
-      { type: "mcq", text: "What does `typeof null` return?", options: ["null", "undefined", "object", "string"], answer: "object" },
-      { type: "coding", text: "Write a function to reverse a string." }
-    ],
-  },
-};
+// const testData = {
+//   1: {
+//     title: "JavaScript",
+//     questions: [
+//       { type: "mcq", text: "What does `typeof null` return?", options: ["null", "undefined", "object", "string"], answer: "object" },
+//       { type: "coding", text: "Write a function to reverse a string." }
+//     ],
+//   },
 
-app.get("/api/tests/:testId", (req, res) => {
-  const { testId } = req.params;
-  const test = testData[testId];
-  if (test) {
-    res.json(test);
-  } else {
-    res.status(404).json({ error: "Test not found" });
-  }
-});
+// 2: {
+//     title: "Python",
+//     questions: [
+//       { type: "mcq", text: "What does `typeof null` return?", options: ["null", "undefined", "object", "string"], answer: "object" },
+//       { type: "coding", text: "Write a function to reverse a string." }
+//     ],
+//   },
+// };
+
+// app.get("/api/tests/:testId", (req, res) => {
+//   const { testId } = req.params;
+//   const test = testData[testId];
+//   if (test) {
+//     res.json(test);
+//   } else {
+//     res.status(404).json({ error: "Test not found" });
+//   }
+// });
 
 app.post("/api/submit-test", (req, res) => {
   console.log("Received test results:", req.body);

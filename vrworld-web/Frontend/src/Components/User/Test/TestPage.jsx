@@ -46,7 +46,7 @@ const TestPage = () => {
 
   const fetchTest = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/tests/${testId}`);
+      const response = await fetch(`http://localhost:5000/api/exams/${testId}`);
       if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
       const data = await response.json();
       setTest(data);
@@ -80,25 +80,46 @@ const TestPage = () => {
   const handleVisibilityChange = () => {
     if (document.hidden) {
       setLeaveWarnings((prev) => {
-        if (prev + 1 >= 3) {
+        const newWarnings = prev + 1;
+  
+        if (newWarnings >= 3) {
+          alert("You have left the test too many times. Submitting now.");
           handleSubmit();
+        } else {
+          alert(`Warning ${newWarnings}/3: Leaving the test is not allowed!`);
         }
-        return prev + 1;
+  
+        return newWarnings;
       });
     }
   };
-
+  
   const startCamera = async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-      if (videoRef.current) videoRef.current.srcObject = stream;
+      const constraints = {
+        video: {
+          width: { ideal: 640 },
+          height: { ideal: 480 },
+          facingMode: "user", // Ensures front camera usage
+        }
+      };
+  
+      const stream = await navigator.mediaDevices.getUserMedia(constraints);
+  
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+        await videoRef.current.play(); // Ensures video playback starts
+      }
+  
       cameraStreamRef.current = stream;
       setCameraActive(true);
     } catch (error) {
       console.error("Error accessing camera:", error);
     }
   };
-
+  
+  
+    
   const stopCamera = () => {
     if (cameraStreamRef.current) {
       cameraStreamRef.current.getTracks().forEach((track) => track.stop());
