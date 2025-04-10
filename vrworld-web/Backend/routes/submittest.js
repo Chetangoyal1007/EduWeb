@@ -3,6 +3,7 @@ const router = express.Router();
 const Test = require("../models/Exam");
 const Result = require("../models/Result");
 
+// Submit Test and Save Result
 router.post("/", async (req, res) => {
   const { testId, answers, user } = req.body;
 
@@ -13,28 +14,31 @@ router.post("/", async (req, res) => {
     let score = 0;
     const details = [];
 
+    // Loop through questions and evaluate answers
     test.questions.forEach((question, index) => {
-      const userAnswer = answers[index];
-      const isCorrect = question.correctAnswer === userAnswer;
+      const userAnswer = answers[index] || "";
+      const isCorrect =
+        question.type === "mcq" && question.correctAnswer === userAnswer;
 
-      if (isCorrect) {
-        score += question.marks;
-      }
+      const marksAwarded = isCorrect ? question.marks : 0;
+      if (isCorrect) score += marksAwarded;
 
       details.push({
         question: question.text,
         type: question.type,
         userAnswer,
-        correctAnswer: question.correctAnswer,
+        correctAnswer: question.correctAnswer || "",
         correct: isCorrect,
-        marksAwarded: isCorrect ? question.marks : 0,
+        marksAwarded,
       });
     });
 
-    const totalMarks = test.questions.reduce((acc, q) => acc + q.marks, 0);
+    // Calculate total marks
+    const totalMarks = test.questions.reduce((sum, q) => sum + q.marks, 0);
 
+    // Create and save result
     const result = new Result({
-      user, // frontend expects a 'user' string or id
+      user,
       testTitle: test.title,
       score,
       total: totalMarks,
@@ -44,13 +48,21 @@ router.post("/", async (req, res) => {
 
     await result.save();
 
-    res.status(200).json({ message: "Test submitted", score, resultId: result._id });
+    res.status(200).json({
+      message: "Test submitted successfully",
+      score,
+      total: totalMarks,
+      resultId: result._id,
+    });
+    console.log("Returned Total:", totalMarks, "Type:", typeof totalMarks);
+
   } catch (error) {
     console.error("Submit error:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 });
-// Get all submitted results
+
+// Get All Submitted Results
 router.get("/", async (req, res) => {
   try {
     const results = await Result.find().sort({ submittedAt: -1 });
@@ -60,6 +72,5 @@ router.get("/", async (req, res) => {
     res.status(500).json({ message: "Failed to retrieve results" });
   }
 });
-
 
 module.exports = router;

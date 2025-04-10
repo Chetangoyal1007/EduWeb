@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 
 const AdminResultViewer = () => {
@@ -32,21 +33,32 @@ const AdminResultViewer = () => {
             <th className="px-4 py-2 border">Test</th>
             <th className="px-4 py-2 border">Score</th>
             <th className="px-4 py-2 border">Total Marks</th>
+            <th className="px-4 py-2 border">Percentage</th>
+            <th className="px-4 py-2 border">Status</th>
             <th className="px-4 py-2 border">Submitted At</th>
           </tr>
         </thead>
         <tbody>
-          {results.map((result) => (
-            <tr key={result._id}>
-              <td className="border px-4 py-2">{result.user}</td>
-              <td className="border px-4 py-2">{result.testTitle}</td>
-              <td className="border px-4 py-2">{result.score}</td>
-              <td className="border px-4 py-2">{result.total}</td>
-              <td className="border px-4 py-2">
-                {new Date(result.submittedAt).toLocaleString()}
-              </td>
-            </tr>
-          ))}
+          {results.map((result) => {
+            const percentage = result.total > 0 ? ((result.score / result.total) * 100).toFixed(2) : 0;
+            const passed = percentage >= 40;
+
+            return (
+              <tr key={result._id}>
+                <td className="border px-4 py-2">{result.user}</td>
+                <td className="border px-4 py-2">{result.testTitle}</td>
+                <td className="border px-4 py-2">{result.score}</td>
+                <td className="border px-4 py-2">{result.total}</td>
+                <td className="border px-4 py-2">{percentage}%</td>
+                <td className={`border px-4 py-2 font-bold ${passed ? "text-green-600" : "text-red-600"}`}>
+                  {passed ? "Passed" : "Failed"}
+                </td>
+                <td className="border px-4 py-2">
+                  {new Date(result.submittedAt).toLocaleString()}
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>

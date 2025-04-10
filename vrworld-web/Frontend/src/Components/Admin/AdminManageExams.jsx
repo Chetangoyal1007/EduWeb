@@ -43,7 +43,8 @@ const AdminManageExams = () => {
       type: "mcq",
       text: "",
       options: ["", "", "", ""],
-      answer: "",
+      correctAnswer: "",
+      marks: 1,
     };
     setEditingExam({ ...editingExam, questions: [...editingExam.questions, newQuestion] });
   };
@@ -64,7 +65,6 @@ const AdminManageExams = () => {
     setEditingExam(null);
     fetchExams();
   };
-
   return (
     <div className="p-10 max-w-5xl mx-auto text-white bg-gray-900 min-h-screen">
       <h1 className="text-3xl font-bold mb-6">Manage Exams</h1>
@@ -104,6 +104,15 @@ const AdminManageExams = () => {
                 onChange={(e) => updateQuestion(i, "text", e.target.value)}
               />
 
+              <input
+                type="number"
+                min="1"
+                className="border p-2 w-full mb-2 text-black"
+                placeholder="Marks"
+                value={q.marks || 1}
+                onChange={(e) => updateQuestion(i, "marks", Number(e.target.value))}
+              />
+
               {q.type === "mcq" && (
                 <div>
                   {q.options.map((opt, j) => (
@@ -119,7 +128,7 @@ const AdminManageExams = () => {
                     className="border p-2 w-full mb-2 text-black"
                     placeholder="Correct Answer"
                     value={q.answer}
-                    onChange={(e) => updateQuestion(i, "answer", e.target.value)}
+                    onChange={(e) => updateQuestion(i, "correctAnswer", e.target.value)}
                   />
                 </div>
               )}
