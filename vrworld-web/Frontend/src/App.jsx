@@ -13,6 +13,7 @@ import Certificate from './Components/User/Test/Certificate.jsx';
 import AdminDashboard from './Components/Admin/dashboard.jsx';
 import AdminCreateExam from './Components/Admin/AdminCreateExam.jsx';
 import AdminManageExams from './Components/Admin/AdminManageExams.jsx';
+import AdminResultViewer  from './Components/Admin/Results.jsx';
 
 const App = () => {
 
@@ -36,6 +37,7 @@ const App = () => {
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/admin/create-exam" element={<AdminCreateExam />} />
         <Route path="/admin/manage-exam" element={<AdminManageExams />} />
+        <Route path="/admin/Results" element={<AdminResultViewer />} />
 
       </Routes>
     </Router>

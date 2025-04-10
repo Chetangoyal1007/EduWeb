@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import AdminCreateExam from "./AdminCreateExam";
 import AdminManageExams from "./AdminManageExams";
+import AdminResultViewer from "./Results";
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState("create");
@@ -31,6 +32,16 @@ const AdminDashboard = () => {
               Manage Exams
             </button>
           </li>
+          <li>
+            <button
+              className={`w-full text-left p-2 rounded ${
+                activeTab === "results" ? "bg-blue-600" : "hover:bg-gray-700"
+              }`}
+              onClick={() => setActiveTab("results")}
+            >
+              View Results
+            </button>
+          </li>
         </ul>
       </div>
 
@@ -38,6 +49,7 @@ const AdminDashboard = () => {
       <div className="flex-1 p-10 overflow-auto">
         {activeTab === "create" && <AdminCreateExam />}
         {activeTab === "manage" && <AdminManageExams />}
+        {activeTab === "results" && <AdminResultViewer />}
       </div>
     </div>
   );

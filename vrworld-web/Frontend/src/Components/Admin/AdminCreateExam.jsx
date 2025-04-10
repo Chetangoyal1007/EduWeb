@@ -11,7 +11,7 @@ const AdminCreateExam = () => {
         type: "mcq",
         text: "",
         options: ["", "", "", ""],
-        answer: "",
+        correctAnswer: "",
         marks: 1,
       },
     ]);
@@ -50,7 +50,7 @@ const AdminCreateExam = () => {
   };
 
   return (
-    <div className="min-h-screen p-10 min-w-screen mx-auto bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white">
+    <div className="min-h-screen p-10 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white">
       <h1 className="text-3xl font-bold mb-6">Create New Exam</h1>
 
       <input
@@ -104,27 +104,29 @@ const AdminCreateExam = () => {
               <input
                 className="border p-2 w-full mt-4 rounded bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                 placeholder="Correct Answer"
-                value={q.answer}
-                onChange={(e) => updateQuestion(i, "answer", e.target.value)}
+                value={q.correctAnswer}
+                onChange={(e) => updateQuestion(i, "correctAnswer", e.target.value)}
               />
             </div>
           )}
         </div>
       ))}
 
-      <button
-        onClick={addQuestion}
-        className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded mr-4"
-      >
-        Add Question
-      </button>
+      <div className="flex gap-4 mt-6">
+        <button
+          onClick={addQuestion}
+          className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
+        >
+          Add Question
+        </button>
 
-      <button
-        onClick={handleSubmit}
-        className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
-      >
-        Create Exam
-      </button>
+        <button
+          onClick={handleSubmit}
+          className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+        >
+          Create Exam
+        </button>
+      </div>
     </div>
   );
 };

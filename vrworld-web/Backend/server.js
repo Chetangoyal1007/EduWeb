@@ -5,6 +5,7 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const authRoutes = require("./routes/auth");
 const examRoutes = require("./routes/exams");
+const resultRoutes=require("./routes/submittest");
 
 
 
@@ -26,12 +27,13 @@ mongoose.connect(process.env.MONGO_URI, {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/exams", examRoutes);
+app.use("/api/results",resultRoutes);
 
 
-app.post("/api/submit-test", (req, res) => {
-  console.log("Received test results:", req.body);
-  res.json({ message: "Test submitted successfully" });
-});
+// app.post("/api/submit-test", (req, res) => {
+//   console.log("Received test results:", req.body);
+//   res.json({ message: "Test submitted successfully" });
+// });
 
 const PORT = 5000;
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));

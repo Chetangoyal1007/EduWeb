@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
 
 const questionSchema = new mongoose.Schema({
-  type: { type: String, enum: ["mcq", "coding"], required: true },
   text: { type: String, required: true },
-  options: [String], // Only for MCQs
-  answer: String,    // Only for MCQs
-  marks: { type: Number, required: true }, // <-- Added marks here
+  type: { type: String, enum: ["mcq", "coding"], required: true },
+  options: { type: [String], default: [] }, // Only relevant for MCQ
+  correctAnswer: { type: String }, // ✅ Make sure this exists
+  marks: { type: Number, default: 1 },
 });
 
 const examSchema = new mongoose.Schema({

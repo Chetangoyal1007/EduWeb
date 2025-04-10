@@ -197,6 +197,7 @@ const Login = () => {
       if (response.data.success) {
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("role", response.data.role);
+        localStorage.setItem("username", response.data.name);
 
         // Redirect based on role
         if (response.data.role === "admin") {
@@ -232,6 +233,8 @@ const Login = () => {
       if (response.data.success) {
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("role", response.data.role);
+        localStorage.setItem("username", response.data.name);
+
 
         // Redirect based on role
         if (response.data.role === "admin") {

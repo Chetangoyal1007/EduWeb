@@ -25,7 +25,7 @@ const signup = async (req, res) => {
       expiresIn: "1h",
     });
 
-    res.status(201).json({ success: true, token, role: newUser.role });
+    res.status(201).json({ success: true, token, role: newUser.role,name:newUser.name });
   } catch (error) {
     console.error("Signup error:", error);
     res.status(500).json({ success: false, message: "Server Error" });
@@ -49,7 +49,7 @@ const login = async (req, res) => {
       expiresIn: "1h",
     });
 
-    res.json({ success: true, token, role: user.role });
+    res.json({ success: true, token, role: user.role,name:user.name });
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).json({ success: false, message: "Server Error" });

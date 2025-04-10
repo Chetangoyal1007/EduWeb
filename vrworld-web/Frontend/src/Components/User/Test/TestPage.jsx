@@ -14,7 +14,7 @@ const TestPage = () => {
   const [leaveWarnings, setLeaveWarnings] = useState(0);
   const [cameraActive, setCameraActive] = useState(false);
   const [cameraPosition, setCameraPosition] = useState({ top: 10, right: 10 });
-
+  const user = localStorage.getItem("username");
   const testContainerRef = useRef(null);
   const videoRef = useRef(null);
   const cameraStreamRef = useRef(null);
@@ -57,9 +57,7 @@ const TestPage = () => {
 
   const requestFullScreen = () => {
     const elem = document.documentElement;
-    if (elem.requestFullscreen) {
-      elem.requestFullscreen();
-    }
+    if (elem.requestFullscreen) elem.requestFullscreen();
   };
 
   document.addEventListener("fullscreenchange", () => {
@@ -81,51 +79,49 @@ const TestPage = () => {
     if (document.hidden) {
       setLeaveWarnings((prev) => {
         const newWarnings = prev + 1;
-  
         if (newWarnings >= 3) {
           alert("You have left the test too many times. Submitting now.");
           handleSubmit();
         } else {
           alert(`Warning ${newWarnings}/3: Leaving the test is not allowed!`);
         }
-  
         return newWarnings;
       });
     }
   };
-  
+
   const startCamera = async () => {
     try {
       const constraints = {
-        video: {
-          width: { ideal: 640 },
-          height: { ideal: 480 },
-          facingMode: "user", // Ensures front camera usage
-        }
+        video: { width: { ideal: 640 }, height: { ideal: 480 }, facingMode: "user" },
       };
-  
       const stream = await navigator.mediaDevices.getUserMedia(constraints);
-  
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
-        await videoRef.current.play(); // Ensures video playback starts
+        await videoRef.current.play();
       }
-  
       cameraStreamRef.current = stream;
       setCameraActive(true);
     } catch (error) {
       console.error("Error accessing camera:", error);
     }
   };
-  
-  
-    
+
   const stopCamera = () => {
     if (cameraStreamRef.current) {
-      cameraStreamRef.current.getTracks().forEach((track) => track.stop());
+      const tracks = cameraStreamRef.current.getTracks();
+      tracks.forEach((track) => track.stop());
+  
+      if (videoRef.current) {
+        videoRef.current.pause();
+        videoRef.current.srcObject = null;
+      }
+  
+      cameraStreamRef.current = null;
       setCameraActive(false);
     }
   };
+  
 
   const handleDragCamera = (event) => {
     setCameraPosition({ top: event.clientY - 50, right: window.innerWidth - event.clientX - 50 });
@@ -145,22 +141,39 @@ const TestPage = () => {
 
   const handleSubmit = async () => {
     if (isSubmitted) return;
-    setIsSubmitted(true);
-    stopCamera();
-    exitFullScreen();
+
+stopCamera(); // <- Stop camera first
+exitFullScreen();
+setIsSubmitted(true);
+
+
+    // Combine MCQ and code answers
+    const answers = test.questions.map((q, index) => {
+      if (q.type === "mcq") {
+        return mcqAnswers[index] || "";
+      } else if (q.type === "coding") {
+        return codeAnswer || "";
+      } else {
+        return "";
+      }
+    });
 
     try {
-      await fetch("http://localhost:5000/api/submit-test", {
+      const response = await fetch("http://localhost:5000/api/results", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ testId, answers: mcqAnswers, codeAnswer }),
+        body: JSON.stringify({ testId, answers, user: user }),
       });
-      console.log("Test submitted successfully");
+
+      if (!response.ok) throw new Error("Failed to submit test");
+
+      const resultData = await response.json();
+      console.log("Test submitted successfully", resultData);
+
+      navigate("/Thankyou");
     } catch (error) {
       console.error("Error submitting test:", error);
     }
-
-    setTimeout(() => navigate("/Thankyou"), 2000);
   };
 
   if (!test || !test.questions) return <div className="text-center mt-10 text-xl">Loading test...</div>;
@@ -175,16 +188,13 @@ const TestPage = () => {
         Question {currentQuestionIndex + 1} of {test.questions.length}
       </p>
 
-      {/* Question Text */}
       <p className="text-lg font-semibold mb-2">
-  {test.questions[currentQuestionIndex].text}
-</p>
-<p className="text-sm text-gray-700 dark:text-gray-300 mb-4">
-  <strong>Marks:</strong> {test.questions[currentQuestionIndex].marks}
-</p>
+        {test.questions[currentQuestionIndex].text}
+      </p>
+      <p className="text-sm text-gray-700 dark:text-gray-300 mb-4">
+        <strong>Marks:</strong> {test.questions[currentQuestionIndex].marks}
+      </p>
 
-
-      {/* Render MCQ Options if the question type is MCQ */}
       {test.questions[currentQuestionIndex].type === "mcq" && (
         <div className="flex flex-col mt-4 space-y-2">
           {test.questions[currentQuestionIndex].options.map((option, index) => (
@@ -194,7 +204,9 @@ const TestPage = () => {
                 name={`question-${currentQuestionIndex}`}
                 value={option}
                 checked={mcqAnswers[currentQuestionIndex] === option}
-                onChange={() => setMcqAnswers({ ...mcqAnswers, [currentQuestionIndex]: option })}
+                onChange={() =>
+                  setMcqAnswers({ ...mcqAnswers, [currentQuestionIndex]: option })
+                }
                 className="form-radio h-4 w-4 text-blue-600"
               />
               <span>{option}</span>
@@ -203,7 +215,6 @@ const TestPage = () => {
         </div>
       )}
 
-      {/* Render Monaco Editor for coding questions */}
       {test.questions[currentQuestionIndex].type === "coding" && (
         <div className="w-full mt-4">
           <Editor
@@ -216,7 +227,6 @@ const TestPage = () => {
         </div>
       )}
 
-      {/* Navigation Buttons */}
       <div className="flex justify-between w-full max-w-md mt-6">
         <button
           onClick={handlePrevQuestion}
@@ -243,31 +253,25 @@ const TestPage = () => {
         )}
       </div>
 
-      {/* Camera */}
-      {/* Camera */}
-{cameraActive && (
-  <div
-    className="fixed cursor-move"
-    style={{
-      top: cameraPosition.top,
-      right: cameraPosition.right,
-      zIndex: 9999, // Ensure it's above other content
-    }}
-    onMouseMove={handleDragCamera}
-  >
-    <video
-      ref={videoRef}
-      autoPlay
-      playsInline
-      className="w-32 h-32 rounded-full border-2 border-blue-500"
-      style={{
-        objectFit: "cover", // Make sure the video fits the container without distortion
-        backgroundColor: "black", // Ensures it's visible when the camera feed is loading
-      }}
-    />
-  </div>
-)}
-
+      {cameraActive && (
+        <div
+          className="fixed cursor-move"
+          style={{
+            top: cameraPosition.top,
+            right: cameraPosition.right,
+            zIndex: 9999,
+          }}
+          onMouseMove={handleDragCamera}
+        >
+          <video
+            ref={videoRef}
+            autoPlay
+            playsInline
+            className="w-32 h-32 rounded-full border-2 border-blue-500"
+            style={{ objectFit: "cover", backgroundColor: "black" }}
+          />
+        </div>
+      )}
     </div>
   );
 };
