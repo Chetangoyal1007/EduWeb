@@ -1,3 +1,4 @@
+// import statements
 import React, { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Editor from "@monaco-editor/react";
@@ -26,8 +27,13 @@ const TestPage = () => {
   useEffect(() => {
     fetchTest();
     requestFullScreen();
-    startCamera();
 
+    // Delay camera start to reduce race condition
+    setTimeout(() => {
+      startCamera();
+    }, 500);
+
+    // Event handlers
     const handleEvents = (e) => {
       if (
         (e.ctrlKey && ["u", "c", "s"].includes(e.key.toLowerCase())) ||
@@ -104,28 +110,31 @@ const TestPage = () => {
     if (document.hidden) {
       setLeaveWarnings((prev) => {
         const newWarnings = prev + 1;
-        if (newWarnings >= 3) {
-          alert("You left the test too many times. Submitting now.");
-          handleSubmit();
-        } else {
+        if (newWarnings < 3) {
           alert(`Warning ${newWarnings}/3: Leaving the tab is not allowed.`);
         }
         return newWarnings;
       });
     }
   };
+  
+  
+  
 
   const startCamera = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      cameraStreamRef.current = stream;
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
-        await videoRef.current.play();
+        videoRef.current.onloadedmetadata = () => {
+          videoRef.current.play();
+        };
       }
-      cameraStreamRef.current = stream;
       setCameraActive(true);
     } catch (err) {
       console.error("Camera error:", err);
+      showToast("Camera access denied or unavailable.");
     }
   };
 
@@ -141,31 +150,50 @@ const TestPage = () => {
     setCameraActive(false);
   };
 
-  const handleSubmit = async () => {
-    if (isSubmitted) return;
-    setIsSubmitted(true);
-    stopCamera();
-    exitFullScreen();
+  const isSubmittingRef = useRef(false);
 
-    const answers = test.questions.map((q, i) =>
-      q.type === "mcq" ? mcqAnswers[i] || "" : codeAnswer || ""
-    );
+const handleSubmit = async () => {
+  if (isSubmitted || isSubmittingRef.current) return;
 
-    try {
-      const res = await fetch("http://localhost:5000/api/results", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ testId, answers, user }),
-      });
+  setIsSubmitted(true);
+  isSubmittingRef.current = true;
 
-      const result = await res.json();
-      navigate(
-        `/certificate?name=${encodeURIComponent(user)}&score=${result.score}&total=${result.total}`
-      );
-    } catch (err) {
-      console.error("Error submitting:", err);
-    }
-  };
+  stopCamera();
+  exitFullScreen();
+
+  const answers = test.questions.map((q, i) =>
+    q.type === "mcq" ? mcqAnswers[i] || "" : codeAnswer || ""
+  );
+
+  try {
+    const res = await fetch("http://localhost:5000/api/results", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ testId, answers, user }),
+    });
+
+    const result = await res.json();
+
+    const certificateUrl = `/certificate?name=${encodeURIComponent(
+      user
+    )}&score=${result.score}&total=${result.total}`;
+
+    // Immediate redirect fallback for visibility loss
+    window.location.href = certificateUrl;
+
+    // Still attempt SPA navigation
+    navigate(certificateUrl);
+  } catch (err) {
+    console.error("Error submitting:", err);
+  }
+};
+useEffect(() => {
+  if (leaveWarnings >= 3) {
+    alert("You left the test too many times. Submitting now.");
+    handleSubmit();
+  }
+}, [leaveWarnings]);
+
 
   useEffect(() => {
     if (timeLeft <= 0) {
@@ -182,12 +210,11 @@ const TestPage = () => {
   };
 
   const currentQuestion = test?.questions[currentQuestionIndex];
-
   if (!test) return <div className="text-center mt-10 text-xl">Loading test...</div>;
 
   return (
     <div className="min-h-screen flex text-black dark:text-white bg-white dark:bg-black select-none">
-      {/* Left - Question Numbers */}
+      {/* Left Sidebar */}
       <div className="w-[15%] bg-gray-100 dark:bg-gray-800 p-4">
         <h2 className="text-lg font-bold text-center text-blue-600 mb-4">Questions</h2>
         <ul className="space-y-2">
@@ -206,7 +233,7 @@ const TestPage = () => {
         </ul>
       </div>
 
-      {/* Center - Question Panel */}
+      {/* Center Panel */}
       <div
         ref={centerRef}
         className="bg-gray-50 dark:bg-gray-900 p-6 overflow-y-auto"
@@ -254,14 +281,10 @@ const TestPage = () => {
       {/* Resizer */}
       <div
         onMouseDown={() => setIsDragging(true)}
-        className="w-2 bg-gray-400 dark:bg-gray-600 cursor-col-resize flex flex-col items-center justify-center"
-      >
-        <div className="w-1 h-1 bg-white rounded-full my-1" />
-        <div className="w-1 h-1 bg-white rounded-full my-1" />
-        <div className="w-1 h-1 bg-white rounded-full my-1" />
-      </div>
+        className="w-2 bg-gray-400 dark:bg-gray-600 cursor-col-resize"
+      />
 
-      {/* Right - Answer Area */}
+      {/* Right Panel */}
       <div className="flex-1 bg-white dark:bg-gray-800 p-6">
         <h2 className="text-lg font-bold mb-4 text-blue-600 text-center">Your Answer</h2>
         {currentQuestion.type === "mcq" ? (
@@ -314,11 +337,10 @@ const TestPage = () => {
 
       {/* Toast */}
       {toastMessage && (
-  <div className="fixed top-4 left-1/2 -translate-x-1/2 bg-red-500 text-white px-6 py-2 rounded shadow-lg z-[10001] animate-pulse">
-    {toastMessage}
-  </div>
-)}
-
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 bg-red-500 text-white px-6 py-2 rounded shadow-lg z-[10001] animate-pulse">
+          {toastMessage}
+        </div>
+      )}
     </div>
   );
 };
