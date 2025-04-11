@@ -14,11 +14,13 @@ import AdminDashboard from './Components/Admin/dashboard.jsx';
 import AdminCreateExam from './Components/Admin/AdminCreateExam.jsx';
 import AdminManageExams from './Components/Admin/AdminManageExams.jsx';
 import AdminResultViewer  from './Components/Admin/Results.jsx';
+import StudentDashboard from './Components/StudentDashboard/StudentDashbaord.jsx';
+import StudentRoute from './Components/StudentDashboard/StudentProtectedRoute.jsx';
 
 const App = () => {
 
 
-  return (
+  return (  
     <Router>
       {/* Conditionally render Navbar based on the current route */}
        <Navbar />
@@ -38,6 +40,13 @@ const App = () => {
         <Route path="/admin/create-exam" element={<AdminCreateExam />} />
         <Route path="/admin/manage-exam" element={<AdminManageExams />} />
         <Route path="/admin/Results" element={<AdminResultViewer />} />
+        <Route path="/StudentDashboard/StudentDashboard" element={
+    <StudentRoute>
+      <StudentDashboard />
+    </StudentRoute>
+  }
+/>
+        
 
       </Routes>
     </Router>

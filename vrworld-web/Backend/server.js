@@ -30,10 +30,7 @@ app.use("/api/exams", examRoutes);
 app.use("/api/results",resultRoutes);
 
 
-// app.post("/api/submit-test", (req, res) => {
-//   console.log("Received test results:", req.body);
-//   res.json({ message: "Test submitted successfully" });
-// });
+
 
 const PORT = 5000;
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));

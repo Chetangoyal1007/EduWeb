@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "../../../../assets/logo.png";
 import { HiMenuAlt1, HiMenuAlt3 } from "react-icons/hi";
@@ -6,25 +6,34 @@ import DarkMode from "./DarkMode";
 
 const NavLinks = [
   { id: 1, name: "Home", link: "/" },
-  { id: 2, name: "Test", link: "/test", requiresAuth: true }, // Requires authentication
-  { id: 3, name: "Course", link: "/course", requiresAuth: true }, // Requires authentication
+  { id: 2, name: "Test", link: "/test", requiresAuth: true },
+  { id: 3, name: "Course", link: "/course", requiresAuth: true },
   { id: 4, name: "Contact", link: "/contact" },
-  { id: 5, name: "Login", link: "/login", requiresAuth: false }, // Login link
+  { id: 5, name: "Login", link: "/login", requiresAuth: false },
 ];
 
 const Navbar = () => {
-  const [showMenu, setShowMenu] = React.useState(false);
+  const [showMenu, setShowMenu] = useState(false);
   const navigate = useNavigate();
 
-  // Check if the user is logged in by checking for the token in localStorage
   const isAuthenticated = localStorage.getItem("token") !== null;
+  const role = localStorage.getItem("role");
 
   const toggleMenu = () => setShowMenu(!showMenu);
 
-  // Logout function
   const handleLogout = () => {
-    localStorage.removeItem("token"); // Clear user session data
-    navigate("/login"); // Redirect to login page
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    localStorage.removeItem("username");
+    navigate("/login");
+  };
+
+  const handleHomeRedirect = () => {
+    if (role === "admin") {
+      navigate("/admin");
+    } else {
+      navigate("/");
+    }
   };
 
   return (
@@ -43,24 +52,33 @@ const Navbar = () => {
           <nav className="hidden md:flex items-center gap-8">
             <ul className="flex items-center gap-8">
               {NavLinks.map(({ id, name, link, requiresAuth }) => {
-                // Conditionally render links based on authentication status
-                if (requiresAuth && !isAuthenticated) return null; // Don't show links if the user is not authenticated
-                if (!requiresAuth && isAuthenticated && name === "Login") return null; // Don't show Login button if user is authenticated
+                if (requiresAuth && !isAuthenticated) return null;
+                if (!requiresAuth && isAuthenticated && name === "Login") return null;
 
                 return (
                   <li key={id} className="py-4">
-                    <Link
-                      to={link}
-                      className="text-xl font-semibold hover:text-primary py-2 hover:border-b-2 hover:border-secondary transition-colors duration-500"
-                    >
-                      {name}
-                    </Link>
+                    {name === "Home" ? (
+                      <span
+                        onClick={handleHomeRedirect}
+                        className="cursor-pointer text-xl font-semibold hover:text-primary py-2 hover:border-b-2 hover:border-secondary transition-colors duration-500"
+                      >
+                        {name}
+                      </span>
+                    ) : (
+                      <Link
+                        to={link}
+                        className="text-xl font-semibold hover:text-primary py-2 hover:border-b-2 hover:border-secondary transition-colors duration-500"
+                      >
+                        {name}
+                      </Link>
+                    )}
                   </li>
                 );
               })}
             </ul>
+
             <DarkMode />
-            {/* Logout Button */}
+
             {isAuthenticated && (
               <button
                 onClick={handleLogout}
@@ -71,7 +89,7 @@ const Navbar = () => {
             )}
           </nav>
 
-          {/* Mobile Menu */}
+          {/* Mobile Menu Toggle */}
           <div className="md:hidden flex items-center gap-4">
             <DarkMode />
             {showMenu ? (
@@ -82,28 +100,38 @@ const Navbar = () => {
           </div>
         </div>
 
-        {/* Mobile Dropdown Menu */}
+        {/* Mobile Dropdown */}
         {showMenu && (
           <div className="absolute top-16 left-0 w-full bg-white dark:bg-black shadow-md md:hidden">
             <ul className="flex flex-col items-center gap-4 py-4">
               {NavLinks.map(({ id, name, link, requiresAuth }) => {
-                // Conditionally render links based on authentication status
-                if (requiresAuth && !isAuthenticated) return null; // Don't show links if the user is not authenticated
-                if (!requiresAuth && isAuthenticated && name === "Login") return null; // Don't show Login button if user is authenticated
+                if (requiresAuth && !isAuthenticated) return null;
+                if (!requiresAuth && isAuthenticated && name === "Login") return null;
 
                 return (
                   <li key={id}>
-                    <Link
-                      to={link}
-                      className="text-xl font-semibold hover:text-primary transition-colors duration-500"
-                      onClick={toggleMenu} // Close menu on click
-                    >
-                      {name}
-                    </Link>
+                    {name === "Home" ? (
+                      <span
+                        onClick={() => {
+                          handleHomeRedirect();
+                          toggleMenu();
+                        }}
+                        className="cursor-pointer text-xl font-semibold hover:text-primary transition-colors duration-500"
+                      >
+                        {name}
+                      </span>
+                    ) : (
+                      <Link
+                        to={link}
+                        className="text-xl font-semibold hover:text-primary transition-colors duration-500"
+                        onClick={toggleMenu}
+                      >
+                        {name}
+                      </Link>
+                    )}
                   </li>
                 );
               })}
-              {/* Mobile Logout Button */}
               {isAuthenticated && (
                 <li>
                   <button

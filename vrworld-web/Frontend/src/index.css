@@ -9,6 +9,33 @@
   }
 }
 
+@media print {
+  /* Hide everything by default */
+  body * {
+    visibility: hidden !important;
+  }
+
+  /* Make only print-area visible */
+  .print-area,
+  .print-area * {
+    visibility: visible !important;
+  }
+
+  .print-area {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+
+  /* Hide elements that should not be printed */
+  .no-print {
+    display: none !important;
+  }
+}
+
+
+
 .animated-wrapper {
   animation-name: move-wrapper;
   animation-duration: 25s;
