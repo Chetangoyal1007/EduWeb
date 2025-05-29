@@ -6,6 +6,13 @@ const questionSchema = new mongoose.Schema({
   options: { type: [String], default: [] }, // Only relevant for MCQ
   correctAnswer: { type: String }, // ✅ Make sure this exists
   marks: { type: Number, default: 1 },
+  description: { type: String }, // Only relevant for coding questions
+  testCases: [
+    {
+      input: { type: String, required: true },
+      output: { type: String, required: true },
+    },
+  ], // Only relevant for coding questions
 });
 
 const examSchema = new mongoose.Schema({

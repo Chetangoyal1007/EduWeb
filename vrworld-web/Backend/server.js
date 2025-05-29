@@ -6,6 +6,7 @@ const dotenv = require("dotenv");
 const authRoutes = require("./routes/auth");
 const examRoutes = require("./routes/exams");
 const resultRoutes=require("./routes/submittest");
+const runCodeRoute = require("./routes/runcode");
 
 
 
@@ -28,9 +29,10 @@ mongoose.connect(process.env.MONGO_URI, {
 app.use("/api/auth", authRoutes);
 app.use("/api/exams", examRoutes);
 app.use("/api/results",resultRoutes);
+app.use("/api/runcode", runCodeRoute);
 
 
 
 
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
