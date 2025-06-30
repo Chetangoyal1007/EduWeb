@@ -1,4 +1,4 @@
-import User from "../models/user";
+import User from "../models/user.js"; // Ensure this path is correct based on your project structure
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
