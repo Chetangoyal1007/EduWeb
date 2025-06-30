@@ -11,7 +11,7 @@ const AdminResultViewer = () => {
 
   const fetchResults = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/results");
+      const res = await fetch("https://edu-web-roan.vercel.app/api/results");
       const data = await res.json();
       setResults(data);
     } catch (error) {
