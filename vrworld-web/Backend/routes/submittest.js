@@ -1,6 +1,6 @@
 import express from "express"; // Ensure you have express installed and imported
 const router = express.Router();
-import Test from "../models/Exam.js"; // Adjust the path as necessary
+import Exam from "../models/Exam.js"; // Adjust the path as necessary
 import Result from "../models/Result.js"; // Adjust the path as necessary
 
 // Submit Test and Save Result
@@ -8,7 +8,7 @@ router.post("/", async (req, res) => {
   const { testId, answers, user } = req.body;
 
   try {
-    const test = await Test.findById(testId);
+    const test = await Exam.findById(testId);
     if (!test) return res.status(404).json({ message: "Test not found" });
 
     let score = 0;
@@ -73,4 +73,4 @@ router.get("/", async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

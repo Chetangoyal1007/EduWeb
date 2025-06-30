@@ -8,4 +8,4 @@ router.post("/login", login);
 // POST /api/auth/signup
 router.post("/signup", signup);
 
-module.exports = router;
+export default router;

@@ -19,5 +19,5 @@ const examSchema = new mongoose.Schema({
   title: { type: String, required: true },
   questions: [questionSchema],
 });
-
-module.exports = mongoose.model("Exam", examSchema);
+const Exam = mongoose.model("Exam", examSchema);
+export default Exam;
