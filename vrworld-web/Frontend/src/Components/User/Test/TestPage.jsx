@@ -82,7 +82,7 @@
 //   }, [testId]);
 
 //   const fetchTest = async () => {
-//     const res = await fetch(`http://localhost:5000/api/exams/${testId}`);
+//     const res = await fetch(`https://eduwebbackend.onrender.com/api/exams/${testId}`);
 //     const data = await res.json();
 //     setTest(data);
 //   };
@@ -166,7 +166,7 @@
 //   );
 
 //   try {
-//     const res = await fetch("http://localhost:5000/api/results", {
+//     const res = await fetch("https://eduwebbackend.onrender.com/api/results", {
 //       method: "POST",
 //       headers: { "Content-Type": "application/json" },
 //       body: JSON.stringify({ testId, answers, user }),
@@ -378,7 +378,7 @@ const TestPage = () => {
 
   // Fetch test data
   useEffect(() => {
-    fetch(`http://localhost:5000/api/exams/${testId}`)
+    fetch(`https://eduwebbackend.onrender.com/api/exams/${testId}`)
       .then((res) => res.json())
       .then(setTest)
       .catch(console.error);
@@ -469,7 +469,7 @@ const TestPage = () => {
     );
 
     try {
-      const res = await fetch("http://localhost:5000/api/results", {
+      const res = await fetch("https://eduwebbackend.onrender.com/api/results", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ testId, answers, user }),
