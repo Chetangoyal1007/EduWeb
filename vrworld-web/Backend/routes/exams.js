@@ -1,6 +1,6 @@
-const express = require("express");
+import express from "express"; // Ensure you have express installed and imported
 const router = express.Router();
-const Exam = require("../models/Exam");
+import Exam from "../models/Exam.js"; // Adjust the path as necessary
 
 // Create a new exam
 router.post("/", async (req, res) => {

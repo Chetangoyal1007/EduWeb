@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const resultSchema = new mongoose.Schema({
   user: { type: String, required: true }, // Replace with ObjectId if you have user model

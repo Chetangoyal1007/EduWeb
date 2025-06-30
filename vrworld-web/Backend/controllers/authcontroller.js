@@ -1,6 +1,6 @@
 import User from "../models/user.js"; // Ensure this path is correct based on your project structure
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 // POST /api/auth/signup
 const signup = async (req, res) => {

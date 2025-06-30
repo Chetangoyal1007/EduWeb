@@ -1,12 +1,12 @@
 
-const express = require("express");
-const mongoose = require("mongoose");
-const cors = require("cors");
-const dotenv = require("dotenv");
-const authRoutes = require("./routes/auth");
-const examRoutes = require("./routes/exams");
-const resultRoutes=require("./routes/submittest");
-const runCodeRoute = require("./routes/runcode");
+import express from "express"; // Ensure you have express installed and imported
+import mongoose from "mongoose"; // Ensure you have mongoose installed and imported
+import cors from "cors"; // Ensure you have cors installed and imported
+import dotenv from "dotenv"; // Ensure you have dotenv installed and imported
+import authRoutes from "./routes/auth.js"; // Adjust the path as necessary
+import examRoutes from "./routes/exams.js"; // Adjust the path as necessary
+import resultRoutes from "./routes/submittest.js"; // Adjust the path as necessary
+import runCodeRoute from "./routes/runcode.js"; // Adjust the path as necessary
 
 
 
