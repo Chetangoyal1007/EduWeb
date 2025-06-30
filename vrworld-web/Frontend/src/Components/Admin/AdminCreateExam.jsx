@@ -208,7 +208,7 @@ const AdminCreateExam = () => {
       }
     } catch (err) {
       console.error(err);
-      alert("Error creating exam.");
+      alert("Error creating exam");
     }
   };
 
