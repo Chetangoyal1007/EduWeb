@@ -14,7 +14,11 @@ dotenv.config();
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: 'https://edu-web-hntb.vercel.app',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  credentials: true, // if you're using cookies/auth headers
+}));
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI, {
