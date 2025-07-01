@@ -26,7 +26,7 @@
 
   //     setLoading(true);
   //     try {
-  //       const response = await axios.post("https://eduwebbackend.onrender.com/api/auth/login", {
+  //       const response = await axios.post("https://eduwebbackend.netlify.app//api/auth/login", {
   //         email,
   //         password,
   //       });
@@ -60,7 +60,7 @@
 
   //     setLoading(true);
   //     try {
-  //       const response = await axios.post("https://eduwebbackend.onrender.com/api/auth/signup", {
+  //       const response = await axios.post("https://eduwebbackend.netlify.app//api/auth/signup", {
   //         name,
   //         email,
   //         password,
@@ -219,7 +219,7 @@
   
       setLoading(true);
       try {
-        const response = await axios.post("https://eduwebbackend.onrender.com/api/auth/login", {
+        const response = await axios.post("https://eduwebbackend.netlify.app//api/auth/login", {
           email,
           password,
         });
@@ -252,7 +252,7 @@
   
       setLoading(true);
       try {
-        const response = await axios.post("https://eduwebbackend.onrender.com/api/auth/signup", {
+        const response = await axios.post("https://eduwebbackend.netlify.app//api/auth/signup", {
           name,
           email,
           password,

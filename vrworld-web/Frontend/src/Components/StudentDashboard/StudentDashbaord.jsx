@@ -11,7 +11,7 @@ const StudentDashboard = () => {
 
   const fetchResults = async () => {
     try {
-      const res = await fetch("https://eduwebbackend.onrender.com/api/results");
+      const res = await fetch("https://eduwebbackend.netlify.app//api/results");
       const data = await res.json();
       const filtered = data.filter((r) => r.user === user);
       setResults(filtered);

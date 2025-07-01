@@ -5,7 +5,7 @@ const AdminManageExams = () => {
   const [editingExam, setEditingExam] = useState(null);
 
   const fetchExams = async () => {
-    const res = await fetch("https://eduwebbackend.onrender.com/api/exams");
+    const res = await fetch("https://eduwebbackend.netlify.app//api/exams");
     const data = await res.json();
     setExams(data);
   };
@@ -16,7 +16,7 @@ const AdminManageExams = () => {
 
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this exam?")) return;
-    await fetch(`https://eduwebbackend.onrender.com/api/exams/${id}`, {
+    await fetch(`https://eduwebbackend.netlify.app//api/exams/${id}`, {
       method: "DELETE",
     });
     setExams(exams.filter((e) => e._id !== id));
@@ -56,7 +56,7 @@ const AdminManageExams = () => {
   };
 
   const handleUpdate = async () => {
-    await fetch(`https://eduwebbackend.onrender.com/api/exams/${editingExam._id}`, {
+    await fetch(`https://eduwebbackend.netlify.app//api/exams/${editingExam._id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(editingExam),
