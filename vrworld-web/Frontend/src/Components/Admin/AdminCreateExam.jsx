@@ -31,7 +31,7 @@
 
 //   const handleSubmit = async () => {
 //     try {
-//       const response = await fetch("https://eduwebbackend.netlify.app//api/exams", {
+//       const response = await fetch("https://eduwebbackend.onrender.com/api/exams", {
 //         method: "POST",
 //         headers: { "Content-Type": "application/json" },
 //         body: JSON.stringify({ title, questions }),
@@ -193,7 +193,7 @@ const AdminCreateExam = () => {
         return q;
       });
 
-      const response = await fetch("https://eduwebbackend.netlify.app//api/exams", {
+      const response = await fetch("https://eduwebbackend.onrender.com/api/exams", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ title, questions: updatedQuestions }),

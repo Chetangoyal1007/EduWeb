@@ -67,7 +67,7 @@ const CurrentTests = () => {
   useEffect(() => {
     AOS.init({ once: true });
 
-    fetch("https://eduwebbackend.netlify.app//api/exams")
+    fetch("https://eduwebbackend.onrender.com/api/exams")
       .then(res => res.json())
       .then(data => setExams(data))
       .catch(err => console.error("Failed to fetch exams", err));
