@@ -5,6 +5,9 @@ import jwt from "jsonwebtoken";
 // POST /api/auth/signup
 const signup = async (req, res) => {
   const { name, email, password, role } = req.body;
+ if (!name || !email || !password) {
+  return res.status(400).json({ success: false, message: "All fields are required" });
+}
 
   try {
     const existingUser = await User.findOne({ email });
